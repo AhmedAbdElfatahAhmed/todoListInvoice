@@ -70,3 +70,9 @@ function calcTotalPrice() {
   totalPriceElm.innerHTML = totalPrice;
 }
 
+// to accept only number in product price input
+function isNumberKey(e) {
+  let charCode = e.which ? e.which : e.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
+  return true;
+}
