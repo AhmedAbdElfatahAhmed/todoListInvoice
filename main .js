@@ -48,6 +48,9 @@ addButtonElm.addEventListener("click", () => {
       timer: 2000,
       buttons: false,
     });
+  } else if (isProductExist()) {
+    isProductExist();
+    resetInput();
   } else {
     addProduct();
     resetInput();
@@ -75,4 +78,19 @@ function isNumberKey(e) {
   let charCode = e.which ? e.which : e.keyCode;
   if (charCode > 31 && (charCode < 48 || charCode > 57)) return false;
   return true;
+}
+
+function isProductExist() {
+  for (let i = 0; i < productsContainer.length; i++) {
+    if (productsContainer[i].name.includes(productNameElm.value)) {
+      swal("warning!", {
+        title: "product is already Exist",
+        icon: "warning",
+        timer: 2000,
+        buttons: false,
+      });
+      return true;
+    }
+  }
+  return false;
 }
