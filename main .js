@@ -1,25 +1,36 @@
 const productNameElm = document.querySelector(".input-form input[type='text']");
-const productPriceElm = document.querySelector(
-  ".input-form input[type='number']"
-);
+const productPriceElm = document.querySelector(".input-form #price");
 const addButtonElm = document.querySelector(".input-form button");
 const totalPriceElm = document.querySelector(".total span");
-let productContainerElm = document.querySelector("table tbody");
-let product,
-  index = 1,
-  totalPrice = 0;
+let productContainerElm = document.querySelector("table tbody"),
+  productsContainer = [],
+  index = 1;
 
-function addProduct(index) {
-  product = `
-  <tr>
-  <td>${index}</td>
-  <td>${productNameElm.value}</td>
-  <td>${productPriceElm.value}</td>
-  <td><button class="delete">Delete</button></td>
-</tr>
-  `;
-  productContainerElm.innerHTML += product;
-  calcTotalPrice(productPriceElm.value);
+function addProduct() {
+  let theProduct = {
+    name: productNameElm.value,
+    price: productPriceElm.value,
+  };
+
+  productsContainer.push(theProduct);
+  showProduct();
+  totalPrice = 0;
+  calcTotalPrice();
+}
+
+function showProduct() {
+  let product = "";
+  for (let i = 0; i < productsContainer.length; i++) {
+    product += `
+    <tr>
+    <td>${i + 1}</td>
+    <td>${productsContainer[i].name}</td>
+    <td>${productsContainer[i].price}</td>
+    <td><button class="delete" onclick=deleteProduct(${i})>Delete</button></td>
+  </tr>
+    `;
+  }
+  productContainerElm.innerHTML = product;
 }
 
 // resetInput function
@@ -38,23 +49,24 @@ addButtonElm.addEventListener("click", () => {
       buttons: false,
     });
   } else {
-    addProduct(index);
-    index++;
+    addProduct();
     resetInput();
   }
 });
 
-// to delete product
-document.addEventListener("click", (e) => {
-  let targetElement = e.target.parentNode.parentNode;
-  if (e.target.className === "delete") {
-    targetElement.remove();
-    totalPrice -= parseInt(targetElement.children[2].innerHTML);
-    totalPriceElm.innerHTML = totalPrice;
-  }
-});
+// function to Delete Product
+function deleteProduct(index) {
+  productsContainer.splice(index, 1);
+  showProduct();
+  totalPrice = 0;
+  calcTotalPrice();
+}
 
-function calcTotalPrice(price) {
-  totalPrice += parseInt(price);
+function calcTotalPrice() {
+  for (let i = 0; i < productsContainer.length; i++) {
+    totalPrice += parseInt(productsContainer[i].price);
+  }
+
   totalPriceElm.innerHTML = totalPrice;
 }
+
